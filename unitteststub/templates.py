@@ -1,4 +1,3 @@
-
 # Copyright (c) 2015-2020 Agalmic Ventures LLC (www.agalmicventures.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,32 +18,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-functionTest = '''
-	def test_%s(self):
-		raise NotImplementedError() #TODO: test %s'''
+functionTest = """
+    def test_%s(self):
+        raise NotImplementedError()"""
 
 classTest = '''class %sTest(unittest.TestCase):
-	"""
-	%s
-	"""
+    """
+    %s
+    """
 
-	@classmethod
-	def setUpClass(cls):
-		pass #TODO
+    @classmethod
+    def setUpClass(cls):
+        pass
 
-	@classmethod
-	def tearDownClass(cls):
-		pass #TODO
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
-	def setUp(self):
-		pass #TODO
+    def setUp(self):
+        pass
 
-	def tearDown(self):
-		pass #TODO
+    def tearDown(self):
+        pass
 %s'''
 
-unitTestBase = '''
-import unittest
+unitTestBase = """import unittest
 
 %s
-'''
+
+
+if __name__ == "__main__":
+    unittest.main()
+"""

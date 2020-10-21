@@ -1,4 +1,3 @@
-
 # Copyright (c) 2015-2020 Agalmic Ventures LLC (www.agalmicventures.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,23 +20,23 @@
 
 import setuptools
 
-with open('README.md', 'r') as readmeFile:
-    readme = readmeFile.read()
+with open("README.md", "r") as readme:
+    readme = readme.read()
 
 setuptools.setup(
-    name='PyTestStub',
-    version='0.0.4',
-    author='Ian Hutchinson',
-    author_email='ihutchinson@agalmicventures.com',
-    description='Reads your Python code to generate unit test stubs',
+    name="unitteststub",
+    version="0.0.1",
+    author="Ian Hutchinson, Tim Loderhose",
+    author_email="ihutchinson@agalmicventures.com",
+    description="Reads your Python code to generate unit test stubs",
     long_description=readme,
-    long_description_content_type='text/markdown',
-    url='https://github.com/AgalmicVentures/PyTestStub/',
-    packages=['PyTestStub'],
-    license='MIT',
+    long_description_content_type="text/markdown",
+    url="https://github.com/timlod/unitteststub/",
+    packages=["unitteststub"],
+    license="MIT",
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
 )
