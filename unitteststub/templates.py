@@ -18,15 +18,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-functionTest = """
+function = """
     def test_%s(self):
         raise NotImplementedError()"""
 
-classTest = '''class %sTest(unittest.TestCase):
+cls = '''class %sTest(unittest.TestCase):
     """
     %s
     """
+%s
+    def setUp(self):
+        pass
 
+    def tearDown(self):
+        pass
+%s'''
+
+classmethods = """
     @classmethod
     def setUpClass(cls):
         pass
@@ -35,14 +43,11 @@ classTest = '''class %sTest(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def setUp(self):
-        pass
+"""
 
-    def tearDown(self):
-        pass
-%s'''
+base = """import unittest
+from %s import %s
 
-unitTestBase = """import unittest
 
 %s
 

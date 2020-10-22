@@ -25,7 +25,15 @@ from pathlib import Path
 from unitteststub import templates
 
 
-def gen_test(root, file, include_internal=False):
+def gen_test(
+    root,
+    file,
+    import_pre,
+    include_internal=False,
+    class_fmt="%sTest",
+    function_fmt="test_%s",
+    classmethods=False,
+):
     """
         Generates a unit test, given a root directory and a subpath to a file.
 
@@ -64,11 +72,11 @@ def gen_test(root, file, include_internal=False):
 
     # Walk the AST
     classes = []
-    classToMethods = collections.defaultdict(list)
+    class_functions_dict = collections.defaultdict(list)
     functions = []
     for node in tree.body:
-        nodeType = type(node)
-        if nodeType is ast.ClassDef:
+        note_type = type(node)
+        if note_type is ast.ClassDef:
             if not node.name.startswith("_") or include_internal:
                 classes.append(node.name)
 
@@ -79,9 +87,9 @@ def gen_test(root, file, include_internal=False):
                     and not child.name.startswith("_")
                     or include_internal
                 ):
-                    classToMethods[node.name].append(child.name)
+                    class_functions_dict[node.name].append(child.name)
 
-        elif nodeType is ast.FunctionDef:
+        elif note_type is ast.FunctionDef:
             if not node.name.startswith("_") or include_internal:
                 functions.append(node.name)
 
@@ -90,35 +98,38 @@ def gen_test(root, file, include_internal=False):
         return None
 
     # Generate a functions test?
-    unitsTests = []
+    unit_tests = []
     if len(functions) > 0:
-        moduleTestComment = f"Tests for functions in the {module} module."
-        functionTests = "\n".join(
-            templates.functionTest % (function) for function in functions
+        function_comment = f"Tests for functions in the {module} module."
+        function_tests = "\n".join(
+            templates.function % (function_fmt % function)
+            for function in functions
         )
 
-        unitsTests.append(
-            templates.classTest % (module, moduleTestComment, functionTests)
+        unit_tests.append(
+            templates.cls % (module, function_comment, function_tests)
         )
 
     # Generate class tests?
     if len(classes) > 0:
         for c in classes:
-            classTestComment = f"Tests for methods in the {c} class."
-            methodTests = "\n".join(
-                templates.functionTest % (method)
-                for method in classToMethods[c]
-                if method[0] != "_"
+            class_comment = f"Tests for functions in the {c} class."
+            function_tests = "\n".join(
+                templates.function % (function)
+                for function in class_functions_dict[c]
+                if function[0] != "_"
             )
-            unitsTests.append(
-                templates.classTest % (c, classTestComment, methodTests,)
+            unit_tests.append(
+                templates.cls
+                % (
+                    class_fmt % c,
+                    class_comment,
+                    templates.classmethods if classmethods else "",
+                    function_tests,
+                )
             )
             # TODO: generate instance construction stub
 
     # Assemble the unit tests in the template
-    unitTestsStr = "\n\n".join(
-        unitTest for unitTest in unitsTests if unitTest != ""
-    )
-    unitTest = templates.unitTestBase % unitTestsStr
-
-    return unitTest
+    tests_str = "\n\n".join(test for test in unit_tests if test != "")
+    return templates.base % (import_pre, module, tests_str)

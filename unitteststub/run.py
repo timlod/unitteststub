@@ -42,7 +42,7 @@ def main(argv=None):
         """
     # Parse arguments
     parser = argparse.ArgumentParser(
-        description="Python Unit Test Stub generator"
+        description="Python unittest stub generator"
     )
 
     parser.add_argument("module", help="The path of the module to test.")
@@ -87,6 +87,26 @@ def main(argv=None):
         type=int,
         help="The width of a tab in spaces (default actual tabs).",
     )
+    parser.add_argument(
+        "-cf",
+        "--class-fmt",
+        type=str,
+        default="%sTest",
+        help="Format/template of test classes (default %sTest)",
+    )
+    parser.add_argument(
+        "-ff",
+        "--function-fmt",
+        type=str,
+        default="test_%s",
+        help="Format/template of test function names (default test_%s)",
+    )
+    parser.add_argument(
+        "-cm",
+        "--classmethods",
+        action="store_true",
+        help="Whether to write setUpClass and tearDownClass classmethods.",
+    )
 
     if argv is None:
         argv = sys.argv
@@ -111,8 +131,21 @@ def main(argv=None):
             if child_dir.name in arguments.exclude:
                 continue
 
+            if child_dir == Path("."):
+                import_pre = arguments.module
+            else:
+                import_pre = ".".join([arguments.module] + child_dir.parts)
+
             # Generate unit test, skipping ignored files
-            unit_test = gen_test(root, file, arguments.internal)
+            unit_test = gen_test(
+                root,
+                file,
+                import_pre,
+                arguments.internal,
+                arguments.class_fmt,
+                arguments.function_fmt,
+                arguments.classmethods,
+            )
             if unit_test is None:
                 continue
 
