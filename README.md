@@ -70,24 +70,24 @@ Output is simple and human readable:
 Output files have stubs for everything (classmethods can be toggled with -cm) but are easily
 pruned if e.g. setup methods are not needed:
 
-import unittest
-from unitteststub import generator
+        import unittest
+        from unitteststub import generator
 
 
-class generatorTest(unittest.TestCase):
-    """
-    Tests for functions in the generator module.
-    """
+        class generatorTest(unittest.TestCase):
+            """
+            Tests for functions in the generator module.
+            """
 
-    def setUp(self):
-        pass
+            def setUp(self):
+                pass
 
-    def tearDown(self):
-        pass
+            def tearDown(self):
+                pass
 
-    def test_gen_test(self):
-        raise NotImplementedError() # TODO: gen_test
+            def test_gen_test(self):
+                raise NotImplementedError() # TODO: gen_test
 
 
-if __name__ == "__main__":
-    unittest.main()
+        if __name__ == "__main__":
+            unittest.main()
