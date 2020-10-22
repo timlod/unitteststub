@@ -13,21 +13,21 @@ sufficiently complete to delegate the test implementation to another developer.
 
 ## Installation
 
-to be done.
+Currently, you need to `git clone https://github.com/timlod/unitteststub.git`
+and `pip install .` the repository.
 
 ## Scripts
 
-### `GenerateUnitTests.py`
-Generates the actual unit tests, with options like a header file to prepend as
+### `run.py`
+Generates the unit tests, with options like a header file to prepend as
 a license:
 
-        > python3 -m PyTestStub.GenerateUnitTests -h
-        usage: GenerateUnitTests.py [-h] [-F FOOTER] [-H HEADER] [-X EXCLUDE] [-f]
-                                    [-i] [-m TEST_MODULE] [-p TEST_PREFIX]
-                                    [-t TAB_WIDTH]
-                                    module
+        > unitteststub -h
+        usage: unitteststub [-h] [-F FOOTER] [-H HEADER] [-X EXCLUDE] [-f] [-i] [-m TEST_MODULE] [-p TEST_PREFIX] [-t TAB_WIDTH] [-cf CLASS_FMT]
+                    [-ff FUNCTION_FMT] [-cm]
+                    module
 
-        Python Unit Test Stub Generator
+        Python unittest stub generator
 
         positional arguments:
           module                The path of the module to test.
@@ -40,47 +40,54 @@ a license:
                                 File to use as a header.
           -X EXCLUDE, --exclude EXCLUDE
                                 Add a child directory name to exclude.
-          -f, --force           Force files to be generated, even if they already
-                                exist.
-          -i, --internal        Include internal classes and methods starting with a
-                                _.
+          -f, --force           Force files to be generated, even if they already exist.
+          -i, --internal        Include internal classes and methods starting with a _.
           -m TEST_MODULE, --test-module TEST_MODULE
-                                The path of the test module to generate.
+                                The path of the test module to generate. (default ./test)
           -p TEST_PREFIX, --test-prefix TEST_PREFIX
                                 The prefix for test files.
           -t TAB_WIDTH, --tab-width TAB_WIDTH
-                                The width of a tab in spaces (default actual tabs).
+                                The width of a tab in spaces (default 4).
+          -cf CLASS_FMT, --class-fmt CLASS_FMT
+                                Format/template of test classes (default %sTest)
+          -ff FUNCTION_FMT, --function-fmt FUNCTION_FMT
+                                Format/template of test function names (default test_%s)
+          -cm, --classmethods   Whether to write setUpClass and tearDownClass classmethods.
+                usage: GenerateUnitTests.py [-h] [-F FOOTER] [-H HEADER] [-X EXCLUDE] [-f]
+                                            [-i] [-m TEST_MODULE] [-p TEST_PREFIX]
+                                            [-t TAB_WIDTH]
+                                            module
 
 Output is simple and human readable:
 
-        > python3 -m PyTestStub.GenerateUnitTests PyTestStub
-        No classes or functions in PyTestStub/__init__.py
-        Writing test to test/test_Generator.py
-        No classes or functions in PyTestStub/Templates.py
+        > unitteststub unitteststub
+        No classes or functions in unitteststub/__init__.py
+        No classes or functions in unitteststub/templates.py
+        [test/test_run.py] Writing...
+        [test/test_generator.py] Writing...
 
-Output files have stubs for everything but are easily pruned if e.g. setup
-methods are not needed:
 
-        import unittest
+Output files have stubs for everything (classmethods can be toggled with -cm) but are easily
+pruned if e.g. setup methods are not needed:
 
-        class GeneratorTest(unittest.TestCase):
-                """
-                Tests for functions in the Generator module.
-                """
+import unittest
+from unitteststub import generator
 
-                @classmethod
-                def setUpClass(cls):
-                        pass #TODO
 
-                @classmethod
-                def tearDownClass(cls):
-                        pass #TODO
+class generatorTest(unittest.TestCase):
+    """
+    Tests for functions in the generator module.
+    """
 
-                def setUp(self):
-                        pass #TODO
+    def setUp(self):
+        pass
 
-                def tearDown(self):
-                        pass #TODO
+    def tearDown(self):
+        pass
 
-                def test_generateUnitTest(self):
-                        raise NotImplementedError() #TODO: test generateUnitTest
+    def test_gen_test(self):
+        raise NotImplementedError() # TODO: gen_test
+
+
+if __name__ == "__main__":
+    unittest.main()
