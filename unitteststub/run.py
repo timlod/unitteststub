@@ -73,7 +73,7 @@ def main(argv=None):
         "-m",
         "--test-module",
         default="test",
-        help="The path of the test module to generate.",
+        help="The path of the test module to generate. (default ./test)",
     )
     parser.add_argument(
         "-p",
@@ -85,21 +85,22 @@ def main(argv=None):
         "-t",
         "--tab-width",
         type=int,
-        help="The width of a tab in spaces (default actual tabs).",
+        default=4,
+        help="The width of a tab in spaces (default 4).",
     )
     parser.add_argument(
         "-cf",
         "--class-fmt",
         type=str,
         default="%sTest",
-        help="Format/template of test classes (default %sTest)",
+        help="Format/template of test classes (default %%sTest)",
     )
     parser.add_argument(
         "-ff",
         "--function-fmt",
         type=str,
         default="test_%s",
-        help="Format/template of test function names (default test_%s)",
+        help="Format/template of test function names (default test_%%s)",
     )
     parser.add_argument(
         "-cm",
@@ -134,7 +135,9 @@ def main(argv=None):
             if child_dir == Path("."):
                 import_pre = arguments.module
             else:
-                import_pre = ".".join([arguments.module] + child_dir.parts)
+                import_pre = ".".join(
+                    [arguments.module] + list(child_dir.parts)
+                )
 
             # Generate unit test, skipping ignored files
             unit_test = gen_test(
@@ -158,17 +161,16 @@ def main(argv=None):
 
             # Write it
             outfile = "%s%s" % (arguments.test_prefix, file)
-            outdir = Path(arguments.test_module)
+            outdir = Path(arguments.test_module) / child_dir
             outdir.mkdir(parents=True, exist_ok=True)
 
-            # TODO: do this at every level
-            test_init = outdir / "__init__.py"
-            test_init.touch()
+            # Write init file to outdir
+            (outdir / "__init__.py").touch()
 
-            outpath = outdir / child_dir / outfile
+            outpath = outdir / outfile
             if (
                 arguments.force
-                or not os.path.exists(outpath)
+                or not outpath.is_file()
                 or os.stat(outpath).st_size == 0
             ):
                 print("[%s] Writing..." % outpath)

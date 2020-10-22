@@ -19,10 +19,10 @@
 # SOFTWARE.
 
 function = """
-    def test_%s(self):
-        raise NotImplementedError()"""
+    def %s(self):
+        raise NotImplementedError() # TODO: %s"""
 
-cls = '''class %sTest(unittest.TestCase):
+cls = '''class %s(unittest.TestCase):
     """
     %s
     """

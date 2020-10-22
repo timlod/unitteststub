@@ -52,7 +52,7 @@ def gen_test(
         print("Symlink: %s" % path)
         return None
 
-    module, _ = file.stem
+    module = path.stem
 
     # Load the file
     try:
@@ -102,12 +102,18 @@ def gen_test(
     if len(functions) > 0:
         function_comment = f"Tests for functions in the {module} module."
         function_tests = "\n".join(
-            templates.function % (function_fmt % function)
+            templates.function % (function_fmt % function, function)
             for function in functions
         )
 
         unit_tests.append(
-            templates.cls % (module, function_comment, function_tests)
+            templates.cls
+            % (
+                class_fmt % module,
+                function_comment,
+                templates.classmethods if classmethods else "",
+                function_tests,
+            )
         )
 
     # Generate class tests?
@@ -115,7 +121,7 @@ def gen_test(
         for c in classes:
             class_comment = f"Tests for functions in the {c} class."
             function_tests = "\n".join(
-                templates.function % (function)
+                templates.function % (function_fmt % function, function)
                 for function in class_functions_dict[c]
                 if function[0] != "_"
             )
