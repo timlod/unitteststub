@@ -27,7 +27,7 @@ setuptools.setup(
     name="unitteststub",
     version="0.1",
     author="Ian Hutchinson, Tim Loderhose",
-    author_email="ihutchinson@agalmicventures.com",
+    author_email="ihutchinson@agalmicventures.com, tim.loderhose@mlprograms.com",
     description="Reads your Python code to generate unit test stubs",
     long_description=readme,
     long_description_content_type="text/markdown",

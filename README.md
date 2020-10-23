@@ -91,3 +91,12 @@ pruned if e.g. setup methods are not needed:
 
         if __name__ == "__main__":
             unittest.main()
+
+
+### Imports
+
+Note that package imports are only defined correctly if `unitteststub` is called on the
+top-level directory of the package (for this package it would be the unittest directory
+containing the sources). If creating stubs only submodules of a package, you should define
+the output folder with `-m path/to/tests/submodule` and be aware that imports will be defined
+as `from submodule import file` instead of `from package.submodule import file`.
