@@ -33,13 +33,12 @@ sys.path.insert(0, _current_file.parent.parent)
 from unitteststub.generator import gen_test
 
 
-def main(argv=None):
+def main(argv=None) -> int:
     """
-        The main function of the unit test generator tool.
+    The main function of the unit test generator tool.
 
-        :param argv: optional arguments (defaults to sys.argv if not specified)
-        :return: int
-        """
+    :param argv: optional arguments (defaults to sys.argv if not specified)
+    """
     # Parse arguments
     parser = argparse.ArgumentParser(
         description="Python unittest stub generator"
@@ -72,8 +71,8 @@ def main(argv=None):
     parser.add_argument(
         "-m",
         "--test-module",
-        default="test",
-        help="The path of the test module to generate. (default ./test)",
+        default="tests",
+        help="The path of the test module to generate. (default ./tests)",
     )
     parser.add_argument(
         "-p",
